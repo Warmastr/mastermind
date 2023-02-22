@@ -1,10 +1,6 @@
 class Display
-  
   def board
     clear
-
-
-
   end
 
   def title
@@ -18,7 +14,7 @@ class Display
     | \_|  |_/_|_| |_|\__,_|_| |_| |_|\__,_|___/\__\___|_|  (_)  |
     |____________________________________________________________|
 
-  TITLE
+    TITLE
   end
 
   def clear
