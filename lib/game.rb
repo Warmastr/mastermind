@@ -5,9 +5,10 @@ class Game
   include Display
 
   def initialize
+    board_marker = "◯".encode('ASCII', "UTF-8", undef: :replace)
     @round_number = 1
-    @peg_holes = Array.new(48, " ")
-    
+    @peg_holes = Array.new(48, board_marker)
+    @round_helper = [o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o]
   end
 
   def computer_code
@@ -20,8 +21,11 @@ class Game
   def Round
     display.clear
     display.title
-    puts "Round #{round_number}: Using the legend above: "
-    puts "Please enter your guess:" 
+    puts "Round #{round_number}:\nUsing the legend above: "
+    puts "Please enter your guess:"
+    player_input
+
+
     @round_number += 1
   end
 
@@ -33,5 +37,6 @@ class Game
 end
 
 ########################################################################################
-# test section                                                                         #
+################ Test section ##########################################################
 ########################################################################################
+
