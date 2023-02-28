@@ -59,11 +59,10 @@ module Display
         In this version of the game you will be the code breaker (will be updated later).
         At the start of the game, the computer will choose a random code of four colors.
 
-        Your job is to guess the code where you will have 12 chances to guess the correct
-        code. After each guess, the computer will give you feedback on how close you are
-        to guessing the code. 
+        You will have 12 chances to guess the correct code. After each guess, the computer
+        will provide feedback on how close you are to guessing the code. 
         
-        The feedback will be in the form of black and white pegs.
+        The feedback will be in the form of red and white pegs.
         A red peg means you have guessed a color in the correct position. A white peg means
         you have guessed a color in the wrong position. 
         
