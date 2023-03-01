@@ -5,10 +5,9 @@ class Game
   include Display
 
   def initialize
-    board_marker = "◯".encode('ASCII', "UTF-8", undef: :replace)
+    @peg_holes = Board.new
+    @round_helper = Board.new
     @round_number = 1
-    @peg_holes = Array.new(48, board_marker)
-    @round_helper = [o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o]
   end
 
   def computer_code
