@@ -15,25 +15,21 @@ module Display
     TITLE
   end
 
-  def game_board
-    
-  end
-
   def rules
     puts <<-'RULES' 
         Welcome to Mastermind! The rules are simple and as follows:
 
         You will be given the choice to be the code maker or the code breaker. If you
         choose to be the code maker, the computer will be the code breaker and vice versa.
-        In this version of the game you will be the code breaker (will be updated later).
-        At the start of the game, the computer will choose a random code of four colors.
+        In this version of the game you will be the code breaker. At the start of the game, 
+        the computer will choose a random code of four colors/numbers.
 
-        You will have 12 chances to guess the correct code. After each guess, the computer
-        will provide feedback on how close you are to guessing the code. 
+        You will have 12 rounds to guess the correct code. After each guess the round will 
+        advance and the computer will provide feedback on how close you are to guessing the code. 
         
         The feedback will be in the form of red and white pegs.
-        A red peg means you have guessed a color in the correct position. A white peg means
-        you have guessed a color in the wrong position. 
+        A red peg means you have guessed a color in the correct location. A black peg means
+        you have guessed a correct color but in the wrong location.
         
         Good luck!
     RULES
@@ -42,7 +38,4 @@ module Display
   def clear
     print "\e[2J\e[H"
   end
-
-  
-
 end
