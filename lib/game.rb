@@ -1,12 +1,13 @@
 require_relative "./display"
+require_relative "./game_board"
 require "pry-byebug"
 class Game
 
   include Display
 
   def initialize
-    @peg_holes = Board.new
-    @round_helper = Board.new
+    @game_board = Board.new
+    puts @game_board
     @round_number = 1
   end
 
