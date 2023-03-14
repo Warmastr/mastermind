@@ -21,15 +21,14 @@ class Game
   def Round
     display.clear
     display.title
-    puts "Round #{round_number}:\nUsing the legend above: "
+    puts "Round #{@round_number}:\nUsing the legend above: "
     puts "Please enter your guess:"
     player_input
-
-
     @round_number += 1
   end
 
   def player_input
+    puts "Please enter your four-digit guess: You can use the numbers 1-6 that represent the colors in the legend above."
     player_choice = gets.chomp
     player_choice = player_choice.split("")
   end
