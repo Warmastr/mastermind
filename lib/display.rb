@@ -27,8 +27,8 @@ module Display
         advance and the computer will provide feedback on how close you are to guessing the code. 
         
         The feedback will be in the form of red and white pegs.
-        A red peg means you have guessed a color in the correct location. A black peg means
-        you have guessed a correct color but in the wrong location.
+        A red peg means you have guessed a color in the correct location. A white peg means
+        you have guessed a correct color but it is in the wrong location.
         
         Good luck!
     RULES
