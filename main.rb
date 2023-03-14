@@ -7,6 +7,3 @@ include Display
 display.title
 display.rules
 game = Game.new
-
-
-
