@@ -18,3 +18,11 @@ def game_hint(temp_array, computer_code)
 end
 puts "red pegs = #{game_hint(temp_array, computer_code)[0]}"
 puts "white pegs = #{game_hint(temp_array, computer_code)[1]}"
+
+# Takes the player's guess and compares it to the computer's code for exact match. If the guess is correct, it returns true.
+def winCondition(temp_guess, computer_code)
+  temp_guess.eql?(computer_code)
+end
+
+win = winCondition(temp_guess, computer_code)
+puts win
