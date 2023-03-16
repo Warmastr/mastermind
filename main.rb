@@ -4,6 +4,8 @@ require_relative "./lib/game_board"
 
 include Display
 
-title()
-rules()
+title
+rules
 game = Game.new
+
+game.play

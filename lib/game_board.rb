@@ -7,8 +7,8 @@ class Board
     @round_helper = Array.new(48, help_marker)
   end
 
-  def to_s
-    <<-GAME_BOARD
+  def show
+    puts <<-GAME_BOARD
                         _____________________                                        
                         | #{@game_board[44]}   #{@game_board[45]}   #{@game_board[46]}   #{@game_board[47]}  |#{round_helper[46]}#{round_helper[47]}|
                         |________________|#{round_helper[44]}#{round_helper[45]}|
@@ -48,4 +48,6 @@ class Board
                         |________________|__|
     GAME_BOARD
   end
+
+  
 end
