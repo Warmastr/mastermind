@@ -67,6 +67,46 @@ class Game
   end
 end
 
+def change_board(arr)
+  if @round_number == 1
+    @test_board.slice!(0..3)
+    @test_board.insert(0, arr).flatten!
+  elsif @round_number == 2
+    @test_board.slice!(4..7)
+    @test_board.insert(4, arr).flatten!
+  elsif @round_number == 3
+    @test_board.slice!(8..11)
+    @test_board.insert(8, arr).flatten!
+  elsif @round_number == 4
+    @test_board.slice!(12..15)
+    @test_board.insert(12, arr).flatten!
+  elsif @round_number == 5
+    @test_board.slice!(16..19)
+    @test_board.insert(16, arr).flatten!
+  elsif @round_number == 6
+    @test_board.slice!(20..23)
+    @test_board.insert(20, arr).flatten!
+  elsif @round_number == 7
+    @test_board.slice!(24..27)
+    @test_board.insert(24, arr).flatten!
+  elsif @round_number == 8
+    @test_board.slice!(28..31)
+    @test_board.insert(28, arr).flatten!
+  elsif @round_number == 9
+    @test_board.slice!(32..35)
+    @test_board.insert(32, arr).flatten!
+  elsif @round_number == 10
+    @test_board.slice!(36..39)
+    @test_board.insert(36, arr).flatten!
+  elsif @round_number == 11
+    @test_board.slice!(40..43)
+    @test_board.insert(40, arr).flatten!
+  elsif @round_number == 12
+    @test_board.slice!(44..47)
+    @test_board.insert(44, arr).flatten!
+  end
+end
+
 def game_hint(guess, c_code)
   zip = c_code.zip(guess)
   zip = zip.each do |ele|
