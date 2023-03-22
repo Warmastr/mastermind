@@ -107,6 +107,15 @@ def change_board(arr)
   end
 end
 
+def validate_guess(arr)
+  if arr.all? { |x| x.between?(1, 6) } && arr.length == 4
+    arr
+  else
+    puts "Your guess must be 4 numbers between 1 and 6."
+    player_guess
+  end
+end
+
 def game_hint(guess, c_code)
   zip = c_code.zip(guess)
   zip = zip.each do |ele|
