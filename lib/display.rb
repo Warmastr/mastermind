@@ -27,47 +27,51 @@ module Display
   using ColorString
   def title
     puts <<-TITLE
-________________________________________________________________________________________________
-| ___  ____           _                     _            _   |_|_| Round      : #{@round_number}              |
-| |  \\/  (_)         | |                   | |          | |  |_|_| Legend______________________|
-| | .  . |_ _ __   __| |_ __ ___   __ _ ___| |_ ___ _ __| |  |_|_| #{"blue".bg_color(:blue)}   = 1  #{"red".bg_color(:red)}     = 2     |
-| | |\\/| | | '_ \\ / _` | '_ ` _ \\ / _` / __| __/ _ \\ '__| |  |_|_| #{"green".bg_color(:green)}  = 3  #{"yellow".bg_color(:yellow)}  = 4     |
-| | |  | | | | | | (_| | | | | | | (_| \\__ \\ ||  __/ |  |_|  |_|_| #{"orange".bg_color(:orange)} = 5  #{"magenta".bg_color(:magenta)} = 6     |
-| \\_|  |_/_|_| |_|\\__,_|_| |_| |_|\\__,_|___/\\__\\___|_|  (_)  |_|_| blank  = 7                  |
-|____________________________________________________________|_|_|_____________________________|
+________________________________________________________________________________
+|___  ___          _                      _           _      |_|_| Round: #{@round_number}    |
+|   \\/  |         | |                    (_)         | |     |_|_| Legend:     |
+|  .  . | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |     |_|_| #{"  1  ".bg_color(:blue)} #{"  2  ".bg_color(:red)} |
+|  |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |     |_|_| #{"  3  ".bg_color(:green)} #{"  4  ".bg_color(:yellow)} |
+|  |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |     |_|_| #{"  5  ".bg_color(:orange)} #{"  6  ".bg_color(:magenta)} |
+|\\_|  |_/\\__,_|___/\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|     |_|_|             |
+|____________________________________________________________|_|_|_____________|
 
     TITLE
   end
 
   def title_round_10
     puts <<-TITLE
-________________________________________________________________________________________________
-| ___  ____           _                     _            _   |_|_| Round      : #{@round_number}             |
-| |  \\/  (_)         | |                   | |          | |  |_|_| Legend______________________|
-| | .  . |_ _ __   __| |_ __ ___   __ _ ___| |_ ___ _ __| |  |_|_| #{"blue".bg_color(:blue)}   = 1  #{"red".bg_color(:red)}     = 2     |
-| | |\\/| | | '_ \\ / _` | '_ ` _ \\ / _` / __| __/ _ \\ '__| |  |_|_| #{"green".bg_color(:green)}  = 3  #{"yellow".bg_color(:yellow)}  = 4     |
-| | |  | | | | | | (_| | | | | | | (_| \\__ \\ ||  __/ |  |_|  |_|_| #{"orange".bg_color(:orange)} = 5  #{"magenta".bg_color(:magenta)} = 6     |
-| \\_|  |_/_|_| |_|\\__,_|_| |_| |_|\\__,_|___/\\__\\___|_|  (_)  |_|_| blank  = 7                  |
-|____________________________________________________________|_|_|_____________________________|
+________________________________________________________________________________
+|___  ___          _                      _           _      |_|_| Round: #{@round_number}     |
+|   \\/  |         | |                    (_)         | |     |_|_| Legend:     |
+|  .  . | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |     |_|_| #{"  1  ".bg_color(:blue)} #{"  2  ".bg_color(:red)} |
+|  |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |     |_|_| #{"  3  ".bg_color(:green)} #{"  4  ".bg_color(:yellow)} |
+|  |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |     |_|_| #{"  5  ".bg_color(:orange)} #{"  6  ".bg_color(:magenta)} |
+|\\_|  |_/\\__,_|___/\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|     |_|_|             |
+|____________________________________________________________|_|_|_____________|
 
     TITLE
   end
 
   def rules
-    puts <<-'RULES' 
-    Welcome to Mastermind! The rules are simple and as follows:
-    You will be given the choice to be the code maker or the code breaker. If you
-    choose to be the code maker, the computer will be the code breaker and vice versa.
-    In this version of the game you will be the code breaker. At the start of the game, 
-    the computer will choose a random code of four colors/numbers
-    You will have 12 rounds to guess the correct code. After each guess the round will 
-    advance and the computer will provide feedback on how close you are to guessing the code. 
+    puts <<-RULES 
+Welcome to Mastermind! The rules are simple and as follows:
+You will be given the choice to be the code maker or the code breaker. If you
+choose to be the code maker, the computer will be the code breaker and vice versa.
+In this version of the game you will be the code breaker. At the start of the game, 
+the computer will choose a random code of four colors/numbers
+You will have 12 rounds to guess the correct code. After each guess the round will 
+advance and the computer will provide feedback on how close you are to guessing the code. 
     
-    The feedback will be in the form of red and white pegs.
-    A red peg means you have guessed a correct color and a correct location. A white peg means
-    you have guessed a correct color but it is in the wrong location.
+The feedback will be in the form of red and white pegs.
+Red pegs are associated with the number of correct colors and locations. A white peg means
+you have guessed a correct color but it is in the wrong location.
+
+Example:
+The computer's code is #{"  1  ".bg_color(:blue)} #{"  2  ".bg_color(:red)} #{"  3  ".bg_color(:green)} #{"  1  ".bg_color(:blue)}
+
     
-    Good luck!
+Good luck!
     RULES
   end
 
