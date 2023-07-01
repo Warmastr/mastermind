@@ -1,8 +1,11 @@
-require_relative "./lib/display.rb"
-require_relative "./lib/game.rb"
+require_relative "./lib/display"
+require_relative "./lib/game"
+require_relative "./lib/game_board"
 
+include Display
+
+title
+rules
 game = Game.new
-display = Display.new
 
-display.title
-game.computer_code
+game.play
