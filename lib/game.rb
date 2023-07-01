@@ -1,19 +1,31 @@
 require_relative "./display"
-require_relative "./game_board"
 require "pry-byebug"
 class Game
   using ColorString
   include Display
-  attr_reader :game_board, :round_number
+  attr_reader :round_number
 
   def initialize
-    @game_board = Board.new
-    @round_number = 10
+    @round_number = 1
   end
 
   def play
     game_setup
 
+    while @round_number < 13
+      temp_guess = player_input
+      game_hint(temp_guess, @game_code)
+      puts "red pegs = #{game_hint(temp_guess, @game_code)[0]}"
+      puts "white pegs = #{game_hint(temp_guess, @game_code)[1]}"
+
+      if game_over?(temp_guess, @game_code)
+        win
+      elsif @round_number == 12
+        loss
+      else
+        @round_number += 1
+      end
+    end
   end
 
   def computer_code
@@ -35,14 +47,19 @@ class Game
     clear
     title_choice   
     rules
-    puts "Would you like to be the codebreaker or the codemaker? Please enter [1] or type 'breaker' or enter [2] or type 'maker'."
+    puts <<-MENU
+\nWould you like to be the codebreaker or the codemaker? 
+Please enter [1] or type 'breaker', enter [2] or type 'maker'
+    MENU
     game_mode = gets.chomp
     if game_mode == "breaker" || game_mode == 1.to_s
       code_breaker
+      @game_code = computer_code
+      p @game_code # remove this
     elsif game_mode == "maker" || game_mode == 2.to_s
       code_maker
     else
-      puts "Invalid input. Please try again. You can enter 'breaker' or 'maker'."
+      puts "Invalid input. Please try again. You may only enter 'breaker', 'maker', 1, or 2"
       game_setup
     end
   end
@@ -51,65 +68,18 @@ class Game
     clear
     title_choice
     puts <<-BREAKER 
-    You are the codebreaker. The computer will generate a random code.
-    Your job is to guess the code in 12 rounds or less. You will be given 
-    feedback after each round. Good luck!
-    BREAKER
-    game_board.show
-    
-    game_code = computer_code
-    p game_code # remove this
-    temp_guess = player_input
-    game_hint(temp_guess, game_code)
-    
-    puts "red pegs = #{game_hint(temp_guess, game_code)[0]}"
-    puts "white pegs = #{game_hint(temp_guess, game_code)[1]}"
+You are the codebreaker. The computer will generate a random code.
+Your job is to guess the code in 12 rounds or less. You will be given 
+feedback after each round. Good luck!\n
+BREAKER
   end
 
   def player_input
+    puts "\nRound: #{@round_number}"
     puts "\nPlease enter your four-digit guess: You can use the numbers 1-6 that represent the colors in the legend above."
     player_choice = gets.chomp
     player_choice = player_choice.split("").map(&:to_i)
-  end
-end
-
-def change_board(arr)
-  if @round_number == 1
-    @test_board.slice!(0..3)
-    @test_board.insert(0, arr).flatten!
-  elsif @round_number == 2
-    @test_board.slice!(4..7)
-    @test_board.insert(4, arr).flatten!
-  elsif @round_number == 3
-    @test_board.slice!(8..11)
-    @test_board.insert(8, arr).flatten!
-  elsif @round_number == 4
-    @test_board.slice!(12..15)
-    @test_board.insert(12, arr).flatten!
-  elsif @round_number == 5
-    @test_board.slice!(16..19)
-    @test_board.insert(16, arr).flatten!
-  elsif @round_number == 6
-    @test_board.slice!(20..23)
-    @test_board.insert(20, arr).flatten!
-  elsif @round_number == 7
-    @test_board.slice!(24..27)
-    @test_board.insert(24, arr).flatten!
-  elsif @round_number == 8
-    @test_board.slice!(28..31)
-    @test_board.insert(28, arr).flatten!
-  elsif @round_number == 9
-    @test_board.slice!(32..35)
-    @test_board.insert(32, arr).flatten!
-  elsif @round_number == 10
-    @test_board.slice!(36..39)
-    @test_board.insert(36, arr).flatten!
-  elsif @round_number == 11
-    @test_board.slice!(40..43)
-    @test_board.insert(40, arr).flatten!
-  elsif @round_number == 12
-    @test_board.slice!(44..47)
-    @test_board.insert(44, arr).flatten!
+    validate_guess(player_choice)
   end
 end
 
@@ -118,7 +88,7 @@ def validate_guess(arr)
     arr
   else
     puts "Your guess must be 4 numbers between 1 and 6."
-    player_guess
+    player_input
   end
 end
 
@@ -139,4 +109,30 @@ end
 
 def game_over?(guess, c_code)
     guess.eql?(c_code)
+end
+
+def win
+  puts "\nCongratulations you won! You guessed the code in #{@round_number} rounds! The computers code was #{@game_code}."
+  puts "\nWould you like to play again? Enter [1] for yes or [2] for no."
+  new_game = gets.chomp
+
+  if new_game == 1.to_s
+    Game.new.play
+  else
+    puts "Thanks for playing!"
+    exit
+  end
+end
+
+def loss
+  puts "\nSorry, you lost. The computer's code was #{@game_code}, and you failed to guess correctly within 12 rounds."
+  puts "\nWould you like to play again? Enter [1] for yes or [2] for no."
+  new_game = gets.chomp
+
+  if new_game == 1.to_s
+    Game.new.play
+  else
+    puts "Thanks for playing!"
+    exit
+  end
 end
