@@ -54,7 +54,7 @@ Please enter [1] or type 'breaker', enter [2] or type 'maker'
     game_mode = gets.chomp
     if game_mode == "breaker" || game_mode == 1.to_s
       code_breaker
-      @game_code = computer_code
+      @game_code = [1, 2, 3, 1] # remove this
       p @game_code # remove this
     elsif game_mode == "maker" || game_mode == 2.to_s
       code_maker
@@ -70,13 +70,13 @@ Please enter [1] or type 'breaker', enter [2] or type 'maker'
     puts <<-BREAKER 
 You are the codebreaker. The computer will generate a random code.
 Your job is to guess the code in 12 rounds or less. You will be given 
-feedback after each round. Good luck!\n
+feedback in the form of a hint after each round. Good luck!\n
 BREAKER
   end
 
   def player_input
     puts "\nRound: #{@round_number}"
-    puts "\nPlease enter your four-digit guess: You can use the numbers 1-6 that represent the colors in the legend above."
+    puts "\nUsing the numbers 1-6 that represent the colors in the legend above:\nPlease enter your four-digit guess:"
     player_choice = gets.chomp
     player_choice = player_choice.split("").map(&:to_i)
     validate_guess(player_choice)
@@ -87,24 +87,29 @@ def validate_guess(arr)
   if arr.all? { |x| x.between?(1, 6) } && arr.length == 4
     arr
   else
-    puts "Your guess must be 4 numbers between 1 and 6."
+    puts "Your guess must be 4 numbers that are between 1 and 6."
     player_input
   end
 end
 
 def game_hint(guess, c_code)
-  zip = c_code.zip(guess)
-  zip = zip.each do |ele|
-    ele.sort!
+  red_pegs, white_pegs = 0, 0  
+  # a red peg is awarded for each element in the player's guess that is also in the computer's code, and in the same index
+  guess.each_with_index do |num, index|
+    if num == c_code[index]
+      red_pegs += 1
+    end
   end
 
-  zip = zip.uniq!
-  difference = guess.map.each_with_index { |num, index| num == c_code[index] }
-  difference = difference.each_index.select { |i| difference[i] }
-  red_pegs = difference.count
-  intersection = guess & c_code
-  white_pegs = intersection.count - red_pegs
-  red_pegs, white_pegs = [red_pegs, white_pegs]
+  # a white peg is awarded for each element in the player's guess that is also in the computer's code
+  guess.each do |num|
+    if c_code.include?(num)
+      white_pegs += 1
+    end
+  end
+  # white pegs are subtracted by the number of red pegs, because white pegs are also red pegs
+  white_pegs -= red_pegs
+  [red_pegs, white_pegs]
 end
 
 def game_over?(guess, c_code)
@@ -114,9 +119,9 @@ end
 def win
   puts "\nCongratulations you won! You guessed the code in #{@round_number} rounds! The computers code was #{@game_code}."
   puts "\nWould you like to play again? Enter [1] for yes or [2] for no."
-  new_game = gets.chomp
+  game_choice = gets.chomp
 
-  if new_game == 1.to_s
+  if game_choice == 1.to_s
     Game.new.play
   else
     puts "Thanks for playing!"
@@ -127,9 +132,9 @@ end
 def loss
   puts "\nSorry, you lost. The computer's code was #{@game_code}, and you failed to guess correctly within 12 rounds."
   puts "\nWould you like to play again? Enter [1] for yes or [2] for no."
-  new_game = gets.chomp
+  game_choice = gets.chomp
 
-  if new_game == 1.to_s
+  if game_choice == 1.to_s
     Game.new.play
   else
     puts "Thanks for playing!"
