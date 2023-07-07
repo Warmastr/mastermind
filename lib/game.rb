@@ -1,5 +1,5 @@
-require_relative "./display"
-require "pry-byebug"
+require_relative './display'
+# Initializes the round number to 1 and starts the game loop
 class Game
   using ColorString
   include Display
@@ -11,13 +11,10 @@ class Game
 
   def play
     game_setup
-
     while @round_number < 13
       temp_guess = player_input
       game_hint(temp_guess, @game_code)
-      puts "red pegs = #{game_hint(temp_guess, @game_code)[0]}"
-      puts "white pegs = #{game_hint(temp_guess, @game_code)[1]}"
-
+      puts "red pegs = #{game_hint(temp_guess, @game_code)[0]}\nwhite pegs = #{game_hint(temp_guess, @game_code)[1]}"
       if game_over?(temp_guess, @game_code)
         win
       elsif @round_number == 12
@@ -29,10 +26,10 @@ class Game
   end
 
   def computer_code
-    combos = []
     num_array = [1, 2, 3, 4, 5, 6]
-    combos = num_array.permutation(4).to_a
-    code = combos.sample
+    code = []
+    4.times { code << num_array.sample }
+    code
   end
 
   def title_choice
@@ -48,13 +45,13 @@ class Game
     title_choice   
     rules
     puts <<-MENU
-\nWould you like to be the codebreaker or the codemaker? 
-Please enter [1] or type 'breaker', enter [2] or type 'maker'
+    \nWould you like to be the codebreaker or the codemaker? 
+  Please enter [1] or type 'breaker', enter [2] or type 'maker'
     MENU
     game_mode = gets.chomp
     if game_mode == "breaker" || game_mode == 1.to_s
       code_breaker
-      @game_code = [1, 2, 3, 1] # remove this
+      @game_code = computer_code #[1, 2, 3, 1] # remove this
       p @game_code # remove this
     elsif game_mode == "maker" || game_mode == 2.to_s
       code_maker
@@ -68,10 +65,10 @@ Please enter [1] or type 'breaker', enter [2] or type 'maker'
     clear
     title_choice
     puts <<-BREAKER 
-You are the codebreaker. The computer will generate a random code.
-Your job is to guess the code in 12 rounds or less. You will be given 
-feedback in the form of a hint after each round. Good luck!\n
-BREAKER
+  You are the codebreaker. The computer will generate a random code.
+  Your job is to guess the code in 12 rounds or less. You will be given 
+  feedback in the form of a hint after each round. Good luck!\n
+    BREAKER
   end
 
   def player_input
@@ -87,7 +84,7 @@ def validate_guess(arr)
   if arr.all? { |x| x.between?(1, 6) } && arr.length == 4
     arr
   else
-    puts "Your guess must be 4 numbers that are between 1 and 6."
+    puts 'Your guess must be 4 numbers that are between 1 and 6.'
     player_input
   end
 end
@@ -96,11 +93,10 @@ def game_hint(guess, c_code)
   red_pegs, white_pegs = 0, 0  
   # a red peg is awarded for each element in the player's guess that is also in the computer's code, and in the same index
   guess.each_with_index do |num, index|
-    if num == c_code[index]
+    if num == c_code[index]  
       red_pegs += 1
     end
   end
-
   # a white peg is awarded for each element in the player's guess that is also in the computer's code
   guess.each do |num|
     if c_code.include?(num)
@@ -113,7 +109,7 @@ def game_hint(guess, c_code)
 end
 
 def game_over?(guess, c_code)
-    guess.eql?(c_code)
+  guess.eql?(c_code)
 end
 
 def win
@@ -124,7 +120,7 @@ def win
   if game_choice == 1.to_s
     Game.new.play
   else
-    puts "Thanks for playing!"
+    puts 'Thanks for playing!'
     exit
   end
 end
@@ -137,7 +133,7 @@ def loss
   if game_choice == 1.to_s
     Game.new.play
   else
-    puts "Thanks for playing!"
+    puts 'Thanks for playing!'
     exit
   end
 end
