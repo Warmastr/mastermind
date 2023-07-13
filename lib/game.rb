@@ -1,7 +1,7 @@
 require_relative './display'
 # Initializes the round number to 1 and starts the game loop
 class Game
-  include ColorString
+  using ColorString
   include Display
   attr_reader :round_number, :player_choice
   @player_choice = nil
@@ -58,114 +58,120 @@ Please enter [1] or type 'breaker', enter [2] or type 'maker'
     puts "\nUsing the numbers 1-6 that represent the colors in the legend above:\nPlease enter your four-digit guess:\n"
     player_choice = gets.chomp
     player_choice = player_choice.split("").map(&:to_i)
-    validate_guess(player_choice)
-    puts '___________________________________________________________________________________'
-    puts "\nYour Guess:      #{color_the_numbers(player_choice)}"
+    if player_choice.count != 4
+      puts "Invalid input. Please try again. You may only enter four digits that are numbers between 1 and 6."
+      player_input
+    else
+      
+      puts '____________________________________________________________________________________________'
+      puts "\nYour Guess:      #{color_the_numbers(player_choice)}"
+    end
     player_choice
   end
-end
 
-def validate_guess(arr)
-  if arr.all? { |x| x.between?(1, 6) } && arr.length == 4
-    arr
-  else
-    puts 'Your guess must be 4 numbers that are between 1 and 6.'
-    player_input
-  end
-end
 
-def game_hint(guess, c_code)
-  red_pegs, white_pegs = 0, 0
-  # These are used as placeholders to avoid mutating the original arrays
-  unmatched_guess = []
-  unmatched_code = []
-  # determine which element and index are matched between the two arrays, if they aren't matched they get added to the corresponding unmatched array
-  guess.each_with_index do |guess_num, index|
-    if guess_num == c_code[index]
-      red_pegs += 1
+  def validate_guess(arr)
+    if arr.all? { |x| x.between?(1, 6) } && arr.length == 4
+      arr
     else
-      unmatched_guess << guess_num
-      unmatched_code << c_code[index]
-    end
-  end
-  # compare the two unmatched arrays to determine if there are any matches, if there are matches a white peg is added and the match gets deleted from the unmatched array
-  unmatched_guess.each do |num|
-    if unmatched_code.include?(num)
-      white_pegs += 1
-      unmatched_code.delete_at(unmatched_code.index(num))
+      puts 'Your guess must be 4 numbers that are between 1 and 6.'
+      player_input
     end
   end
 
-  [red_pegs, white_pegs]
-end
+  def game_hint(guess, c_code)
+    red_pegs, white_pegs = 0, 0
+    # These are used as placeholders to avoid mutating the original arrays
+    unmatched_guess = []
+    unmatched_code = []
+    # determine which element and index are matched between the two arrays, if they aren't matched they get added to the corresponding unmatched array
+    guess.each_with_index do |guess_num, index|
+      if guess_num == c_code[index]
+        red_pegs += 1
+      else
+        unmatched_guess << guess_num
+        unmatched_code << c_code[index]
+      end
+    end
+    # compare the two unmatched arrays to determine if there are any matches, if there are matches a white peg is added and the match gets deleted  from the unmatched array
+    unmatched_guess.each do |num|
+      if unmatched_code.include?(num)
+        white_pegs += 1
+        unmatched_code.delete_at(unmatched_code.index(num))
+      end
+    end
 
-def game_over?(guess, c_code)
-  guess.eql?(c_code)
-end
-
-def win
-  puts "\nCongratulations you've won! You guessed the code in #{@round_number} rounds! The computer's code was #{@game_code}."
-  puts "\nWould you like to play again? Enter [1] for yes or [2] for no."
-  game_choice = gets.chomp
-
-  if game_choice == 1.to_s
-    Game.new.play
-  else
-    puts 'Thanks for playing!'
-    exit
+    [red_pegs, white_pegs]
   end
-end
 
-def loss
-  puts "\nSorry, you lost. The computer's code was #{@game_code}!"
-  puts "\nWould you like to play again? Enter [1] for yes or [2] for no."
-  game_choice = gets.chomp
-
-  if game_choice == 1.to_s
-    Game.new.play
-  else
-    puts 'Thanks for playing!'
-    exit
+  def game_over?(guess, c_code)
+    guess.eql?(c_code)
   end
-end
 
-def title_choice
-  if round_number >= 0 && round_number < 10
-    title
-  else
-    title_round10
-  end 
-end
+  def win
+    puts "\nCongratulations you've won! You guessed the code in #{@round_number} rounds! The computer's code was #{@game_code}."
+    puts "\nWould you like to play again? Enter [1] for yes or [2] for no."
+    game_choice = gets.chomp
 
-def color_the_numbers(array)
-  colored_array = []
-
-  array.each do |num|
-    case num
-    when 1
-      colored_array << '  1  '.bg_color(:blue)
-    when 2
-      colored_array << '  2  '.bg_color(:red)
-    when 3
-      colored_array << '  3  '.bg_color(:green)
-    when 4
-      colored_array << '  4  '.bg_color(:yellow)
-    when 5
-      colored_array << '  5  '.bg_color(:orange)
-    when 6
-      colored_array << '  6  '.bg_color(:magenta)
+    if game_choice == 1.to_s
+      Game.new.play
+    else
+      puts 'Thanks for playing!'
+      exit
     end
   end
 
-  colored_array
-end
+  def loss
+    puts "\nSorry, you lost. The computer's code was #{@game_code}!"
+    puts "\nWould you like to play again? Enter [1] for yes or [2] for no."
+    game_choice = gets.chomp
 
-def code_breaker
-  clear
-  title_choice
-  puts <<-BREAKER 
-You are the codebreaker. The computer will generate a random code.
-Your job is to guess the code in 12 rounds or less. You will be given 
-feedback in the form of a hint after each round. Good luck!\n
-  BREAKER
+    if game_choice == 1.to_s
+      Game.new.play
+    else
+      puts 'Thanks for playing!'
+      exit
+    end
+  end
+
+  def title_choice
+    if round_number >= 0 && round_number < 10
+      title
+    else
+      title_round10
+    end 
+  end
+
+  def color_the_numbers(array)
+    colored_array = []
+
+    array.each do |num|
+      case num
+      when 1
+        colored_array << '  1  '.bg_color(:blue).fg_color(:white)
+      when 2
+        colored_array << '  2  '.bg_color(:red).fg_color(:white)
+      when 3
+        colored_array << '  3  '.bg_color(:green).fg_color(:white)
+      when 4
+        colored_array << '  4  '.bg_color(:yellow).fg_color(:black)
+      when 5
+        colored_array << '  5  '.bg_color(:orange).fg_color(:black)
+      when 6
+        colored_array << '  6  '.bg_color(:magenta).fg_color(:black)
+      end
+    end
+
+    colored_array.join(' ')
+  end
+
+  def code_breaker
+    clear
+    title_choice
+    puts <<-BREAKER 
+  You are the codebreaker. The computer will generate a random code.
+  Your job is to guess the code in 12 rounds or less. You will be given 
+  feedback in the form of a hint after each round. Good luck!\n
+    BREAKER
+  end
 end
