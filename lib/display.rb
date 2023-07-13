@@ -22,6 +22,11 @@ module ColorString
       rgb_val = RGB_COLORS[color]
       "\e[48;2;#{rgb_val}m#{self}\e[0m"
     end
+
+    def fg_color(color)
+      rgb_val = RGB_COLORS[color]
+      "\e[38;2;#{rgb_val}m#{self}\e[0m"
+    end
   end
 end
 
@@ -33,9 +38,9 @@ module Display
 ___________________________________________________________________________________
 |  ____  ___          _                      _           _      |_|_| Round: #{@round_number}    |
 |  |   \\/  |         | |                    (_)         | |     |_|_| Legend:     |
-|  |  .  . | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |     |_|_| #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} |
-|  |  |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |     |_|_| #{'  3  '.bg_color(:green)} #{'  4  '.bg_color(:yellow)} |
-|  |  |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |     |_|_| #{'  5  '.bg_color(:orange)} #{'  6  '.bg_color(:magenta)} |
+|  |  .  . | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |     |_|_| #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  2  '.bg_color(:red).fg_color(:white)} |
+|  |  |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |     |_|_| #{'  3  '.bg_color(:green).fg_color(:white)} #{'  4  '.bg_color(:yellow).fg_color(:black)} |
+|  |  |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |     |_|_| #{'  5  '.bg_color(:orange).fg_color(:black)} #{'  6  '.bg_color(:magenta).fg_color(:black)} |
 |   \\_|  |_/\\__,_|___/\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|     |_|_|             |
 |_______________________________________________________________|_|_|_____________|
 
@@ -47,9 +52,9 @@ ________________________________________________________________________________
 ___________________________________________________________________________________
 |  ____  ___          _                      _           _      |_|_| Round: #{@round_number}   |
 |  |   \\/  |         | |                    (_)         | |     |_|_| Legend:     |
-|  |  .  . | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |     |_|_| #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} |
-|  |  |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |     |_|_| #{'  3  '.bg_color(:green)} #{'  4  '.bg_color(:yellow)} |
-|  |  |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |     |_|_| #{'  5  '.bg_color(:orange)} #{'  6  '.bg_color(:magenta)} |
+|  |  .  . | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |     |_|_| #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  2  '.bg_color(:red).fg_color(:white)} |
+|  |  |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |     |_|_| #{'  3  '.bg_color(:green).fg_color(:white)} #{'  4  '.bg_color(:yellow).fg_color(:black)} |
+|  |  |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |     |_|_| #{'  5  '.bg_color(:orange).fg_color(:black)} #{'  6  '.bg_color(:magenta).fg_color(:black)} |
 |   \\_|  |_/\\__,_|___/\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|     |_|_|             |
 |_______________________________________________________________|_|_|_____________|
 
@@ -74,10 +79,10 @@ ________________________________________________________________________________
       an incorrect position.
 
   Example:
-  The computer's code is: #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} #{'  3  '.bg_color(:green)} #{'  1  '.bg_color(:blue)}
-  Your guess: #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} #{'  1  '.bg_color(:blue)} #{'  5  '.bg_color(:orange)}
+  The computer's code is: #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  2  '.bg_color(:red).fg_color(:white)} #{'  3  '.bg_color(:green).fg_color(:white)} #{'  1  '.bg_color(:blue).fg_color(:white)}
+  Your guess: #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  2  '.bg_color(:red).fg_color(:white)} #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  5  '.bg_color(:orange).fg_color(:black)}
   Based on your guess, the computer will provide the following feedback:
-  #{'  2  '.bg_color(:red)} red pegs #{'  1  '.bg_color(:white)} white pegs
+  #{'  2  '.bg_color(:red).fg_color(:white)} red pegs #{'  1  '.bg_color(:white).fg_color(:black)} white pegs
 
 
 
