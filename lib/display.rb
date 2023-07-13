@@ -30,28 +30,28 @@ module Display
   using ColorString
   def title
     puts <<-TITLE
-  ___________________________________________________________________________________
-  |  ____  ___          _                      _           _      |_|_| Round: #{@round_number}    |
-  |  |   \\/  |         | |                    (_)         | |     |_|_| Legend:     |
-  |  |  .  . | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |     |_|_| #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} |
-  |  |  |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |     |_|_| #{'  3  '.bg_color(:green)} #{'  4  '.bg_color(:yellow)} |
-  |  |  |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |     |_|_| #{'  5  '.bg_color(:orange)} #{'  6  '.bg_color(:magenta)} |
-  |   \\_|  |_/\\__,_|___/\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|     |_|_|             |
-  |_______________________________________________________________|_|_|_____________|
+___________________________________________________________________________________
+|  ____  ___          _                      _           _      |_|_| Round: #{@round_number}    |
+|  |   \\/  |         | |                    (_)         | |     |_|_| Legend:     |
+|  |  .  . | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |     |_|_| #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} |
+|  |  |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |     |_|_| #{'  3  '.bg_color(:green)} #{'  4  '.bg_color(:yellow)} |
+|  |  |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |     |_|_| #{'  5  '.bg_color(:orange)} #{'  6  '.bg_color(:magenta)} |
+|   \\_|  |_/\\__,_|___/\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|     |_|_|             |
+|_______________________________________________________________|_|_|_____________|
 
     TITLE
   end
 
   def title_round10
     puts <<-TITLE
-  ___________________________________________________________________________________
-  |  ____  ___          _                      _           _      |_|_| Round: #{@round_number}   |
-  |  |   \\/  |         | |                    (_)         | |     |_|_| Legend:     |
-  |  |  .  . | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |     |_|_| #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} |
-  |  |  |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |     |_|_| #{'  3  '.bg_color(:green)} #{'  4  '.bg_color(:yellow)} |
-  |  |  |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |     |_|_| #{'  5  '.bg_color(:orange)} #{'  6  '.bg_color(:magenta)} |
-  |   \\_|  |_/\\__,_|___/\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|     |_|_|             |
-  |_______________________________________________________________|_|_|_____________|
+___________________________________________________________________________________
+|  ____  ___          _                      _           _      |_|_| Round: #{@round_number}   |
+|  |   \\/  |         | |                    (_)         | |     |_|_| Legend:     |
+|  |  .  . | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |     |_|_| #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} |
+|  |  |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |     |_|_| #{'  3  '.bg_color(:green)} #{'  4  '.bg_color(:yellow)} |
+|  |  |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |     |_|_| #{'  5  '.bg_color(:orange)} #{'  6  '.bg_color(:magenta)} |
+|   \\_|  |_/\\__,_|___/\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|     |_|_|             |
+|_______________________________________________________________|_|_|_____________|
 
     TITLE
   end
@@ -67,15 +67,17 @@ module Display
   will advance and the computer will provide feedback on how close you are to
   guessing the code.#{' '}
 
-  The feedback will be in the form of red and white pegs.
-  Red pegs are associated with the number of correct colors and locations.
-  A white peg means you have guessed a correct color but it is in the wrong
-  location.
+  The feedback will be in the form of red and white pegs:
+    - A red peg means that you have guessed a correct color/number in the correct
+      position.
+    - A white peg means that you have guessed a correct color/number but it is in
+      an incorrect position.
 
   Example:
-  The computer's code is #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} #{'  3  '.bg_color(:green)} #{'  1  '.bg_color(:blue)}
-  If you guessed #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} #{'  1  '.bg_color(:blue)} #{'  5  '.bg_color(:orange)}:
-
+  The computer's code is: #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} #{'  3  '.bg_color(:green)} #{'  1  '.bg_color(:blue)}
+  Your guess: #{'  1  '.bg_color(:blue)} #{'  2  '.bg_color(:red)} #{'  1  '.bg_color(:blue)} #{'  5  '.bg_color(:orange)}
+  Based on your guess, the computer will provide the following feedback:
+  #{'  2  '.bg_color(:red)} red pegs #{'  1  '.bg_color(:white)} white pegs
 
 
 
