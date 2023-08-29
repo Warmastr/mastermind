@@ -61,12 +61,11 @@ ________________________________________________________________________________
     TITLE
   end
 
-  def rules
-    puts <<-RULES
+  def rules_breaker
+    puts <<-BREAKER
   Welcome to Mastermind! The rules are simple and as follows:
-  You will be given the choice to be the code maker or the code breaker. If you
-  choose to be the code maker, the computer will be the code breaker and vice
-  versa. In this version of the game you will be the code breaker. At the start
+  
+  In this version of the game you will be the code breaker. At the start
   of the game, the computer will choose a random code of four colors/numbers
   You will have 12 rounds to guess the correct code. After each guess the round
   will advance and the computer will provide feedback on how close you are to
@@ -80,14 +79,24 @@ ________________________________________________________________________________
 
   Example:
   The computer's code is: #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  2  '.bg_color(:red).fg_color(:white)} #{'  3  '.bg_color(:green).fg_color(:white)} #{'  1  '.bg_color(:blue).fg_color(:white)}
-  Your guess: #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  2  '.bg_color(:red).fg_color(:white)} #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  5  '.bg_color(:orange).fg_color(:black)}
-  Based on your guess, the computer will provide the following feedback:
+  \n  Your guess is: #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  2  '.bg_color(:red).fg_color(:white)} #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  5  '.bg_color(:orange).fg_color(:black)}
+  \n  Based on your guess, the computer will provide the following feedback:
   #{'  2  '.bg_color(:red).fg_color(:white)} red pegs #{'  1  '.bg_color(:white).fg_color(:black)} white pegs
 
-
-
   Good luck!
-    RULES
+    BREAKER
+  end
+
+  def rules_maker
+    puts <<-MAKER
+  Welcome to Mastermind! The rules are simple and as follows:
+  
+  In this version of the game you will be the code maker. As the code maker, 
+  you will decide upon a four-digit secret code that the computer will not 
+  know. The computer will have 12 rounds to guess your code. 
+  Feedback will be automatically generated after each round. The computer's 
+  first guess will always be #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  1  '.bg_color(:blue).fg_color(:white)} #{'  2  '.bg_color(:red).fg_color(:white)} #{'  2  '.bg_color(:red).fg_color(:white)}.
+  MAKER
   end
 
   def clear
