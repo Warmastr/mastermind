@@ -4,7 +4,6 @@ class Game
   using ColorString
   include Display
   attr_reader :round_number, :player_choice
-  @player_choice = nil
   def initialize
     @round_number = 1
   end
@@ -12,10 +11,9 @@ class Game
   def play
     game_setup
     while @round_number < 13
-      temp_guess = player_input
+      temp_guess = breaker_input
       game_hint(temp_guess, @game_code)
-      # puts "Computer's Code: #{@game_code}" # For testing purposes
-      puts "\nHint:\nred pegs = #{game_hint(temp_guess, @game_code)[0]}\nwhite pegs = #{game_hint(temp_guess, @game_code)[1]}"
+      puts "\nHint:\nred pegs = #{game_hint(temp_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(temp_guess, @game_code)[1].to_s.bg_color(:white)}"
       if game_over?(temp_guess, @game_code)
         win
       elsif @round_number == 12
@@ -26,6 +24,95 @@ class Game
     end
   end
 
+  def game_setup
+    clear
+    title_choice
+    puts <<-MENU
+    \n  Would you like to be the codebreaker or the codemaker? 
+  Please enter [1] or type 'breaker', enter [2] or type 'maker'
+    MENU
+    @game_mode = gets.chomp
+    if @game_mode == "breaker" || @game_mode == 1.to_s
+      clear
+      title_choice
+      rules_breaker
+      prompt
+      code_breaker
+      @game_code = computer_code
+    elsif @game_mode == "maker" || @game_mode == 2.to_s
+      clear
+      title_choice
+      rules_maker
+      prompt
+      play_maker
+    else
+      puts "Invalid input. Please try again. You may only enter 'breaker', 'maker', 1, or 2"
+      game_setup
+    end
+  end
+
+  def prompt
+    puts "\nPress enter to continue..."
+    ready_to_play = gets.chomp
+    while ready_to_play != ""
+      puts 'You must press enter to continue...'
+      ready_to_play = gets.chomp
+    end
+  end
+
+  def title_choice
+    if round_number >= 0 && round_number < 10
+      title
+    else
+      title_round10
+    end 
+  end
+
+  def play_maker
+    temp_guess = maker_input
+    puts "\nThe computer will attempt to guess your code. Press enter to continue."
+    ready_to_play = gets.chomp
+    if ready_to_play != ""
+      puts "You must press enter to continue..."
+      ready_to_play = gets.chomp
+    else
+      computer_algorithm(temp_guess)
+    end
+    
+  end
+
+  def computer_algorithm(array)
+    # generate all possible codes from 1111 to 6666 and store them in an array
+    possible_codes = (1111..6666).to_a
+    # start somewhere to get the first hint
+    current_guess = [1, 1, 2, 2]
+    # determine red and white pegs
+    feedback = game_hint(current_guess, maker_input)
+    # unless the current_guess is a winner, remove all codes that don't match the feedback
+    if feedback == [4, 0]
+      puts "The computer's guess of #{current_guess} is indeed your code!"
+      exit
+    else
+      possible_codes.reject! do |code|
+        game_hint(code, current_guess) != feedback
+      end
+    end
+    
+  end
+
+  def maker_input
+    puts '  Please create a four-digit code using numbers 1-6 that represent the colors in the legend above:'
+    @game_code = gets.chomp
+    @game_code = @game_code.split('').map(&:to_i)
+
+    if @game_code.length != 4
+      puts 'Invalid input. Please try again. You may only enter four digits that are numbers between 1 and 6.'
+      maker_input
+    else
+      validate_code(@game_code)
+    end
+  end
+
   def computer_code
     num_array = [1, 2, 3, 4, 5, 6]
     code = []
@@ -33,49 +120,33 @@ class Game
     code
   end
 
-  def game_setup
-    clear
-    title_choice   
-    rules
-    puts <<-MENU
-\nWould you like to be the codebreaker or the codemaker? 
-Please enter [1] or type 'breaker', enter [2] or type 'maker'
-    MENU
-    game_mode = gets.chomp
-    if game_mode == "breaker" || game_mode == 1.to_s
-      code_breaker
-      @game_code = computer_code
-    elsif game_mode == "maker" || game_mode == 2.to_s
-      code_maker
-    else
-      puts "Invalid input. Please try again. You may only enter 'breaker', 'maker', 1, or 2"
-      game_setup
-    end
-  end
-
-  def player_input
+  def breaker_input
     puts "\nRound: #{@round_number}"
     puts "\nUsing the numbers 1-6 that represent the colors in the legend above:\nPlease enter your four-digit guess:\n"
-    player_choice = gets.chomp
-    player_choice = player_choice.split("").map(&:to_i)
-    if player_choice.count != 4
+    @player_choice = gets.chomp
+    @player_choice = @player_choice.split("").map(&:to_i)
+    if @player_choice.count != 4
       puts "Invalid input. Please try again. You may only enter four digits that are numbers between 1 and 6."
-      player_input
+      breaker_input
     else
-      
-      puts '____________________________________________________________________________________________'
-      puts "\nYour Guess:      #{color_the_numbers(player_choice)}"
+      validate_code(@player_choice)
+      puts '___________________________________________________________________________________'
+      puts "\nYour Guess:   #{color_the_numbers(@player_choice)}"
     end
-    player_choice
+    @player_choice
   end
 
 
-  def validate_guess(arr)
+  def validate_code(arr)
     if arr.all? { |x| x.between?(1, 6) } && arr.length == 4
       arr
     else
       puts 'Your guess must be 4 numbers that are between 1 and 6.'
-      player_input
+      if @game_mode == 'breaker' || @game_mode == 1.to_s
+        breaker_input
+      elsif @game_mode == 'maker' || @game_mode == 2.to_s
+        maker_input
+      end
     end
   end
 
@@ -100,7 +171,6 @@ Please enter [1] or type 'breaker', enter [2] or type 'maker'
         unmatched_code.delete_at(unmatched_code.index(num))
       end
     end
-
     [red_pegs, white_pegs]
   end
 
@@ -109,7 +179,12 @@ Please enter [1] or type 'breaker', enter [2] or type 'maker'
   end
 
   def win
-    puts "\nCongratulations you've won! You guessed the code in #{@round_number} rounds! The computer's code was #{@game_code}."
+    title_choice
+    if @round_number == 1
+      puts "\nCongratulations you've won! You guessed the code in #{@round_number} round!\nThe computer's code was #{color_the_numbers(@game_code)}."
+    else
+      puts "\nCongratulations you've won! You guessed the code in #{@round_number} rounds!\nThe computer's code was #{color_the_numbers(@game_code)}."
+    end
     puts "\nWould you like to play again? Enter [1] for yes or [2] for no."
     game_choice = gets.chomp
 
@@ -132,14 +207,6 @@ Please enter [1] or type 'breaker', enter [2] or type 'maker'
       puts 'Thanks for playing!'
       exit
     end
-  end
-
-  def title_choice
-    if round_number >= 0 && round_number < 10
-      title
-    else
-      title_round10
-    end 
   end
 
   def color_the_numbers(array)
@@ -169,9 +236,21 @@ Please enter [1] or type 'breaker', enter [2] or type 'maker'
     clear
     title_choice
     puts <<-BREAKER 
-  You are the codebreaker. The computer will generate a random code.
+  You are the codebreaker. The computer has generated a random 4-digit code.
   Your job is to guess the code in 12 rounds or less. You will be given 
   feedback in the form of a hint after each round. Good luck!\n
     BREAKER
   end
+
+  def code_maker
+    clear
+    title_choice
+    puts <<-MAKER
+  You are the codemaker. As the codemaker, you will create a four-digit
+  code that the computer will try to guess. The computer will be given
+  12 rounds to guess your code. If the computer guesses your code before
+  the final round, the computer wins, otherwise, you win! \n\n  Good luck!
+    MAKER
+  end
+
 end
