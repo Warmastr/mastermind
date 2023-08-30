@@ -97,7 +97,11 @@ class Game
   def computer_algorithm(array)
     code_count = possible_codes.count
     # start somewhere to get the first hint
-    current_guess = [1, 1, 2, 2]
+    if @round_number == 1
+      current_guess = [1, 1, 2, 2]
+    else
+      current_guess = possible_codes.sample.to_s.split('').map(&:to_i)
+    end
     # determine red and white pegs
     feedback = game_hint(current_guess, @game_code)
     if @round_number == 1
@@ -115,11 +119,12 @@ class Game
     elsif @round_number == 12
       puts "Round: #{@round_number}"
       puts "The computer's guess is: #{color_the_numbers(current_guess)}"
+      puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
       prompt
       win
     else
       eliminate_codes(possible_codes, current_guess, feedback)
-      current_guess = possible_codes.sample.to_s.split('').map(&:to_i)
+      
       puts "\nRound: #{@round_number}"
       puts "The computer's guess is: #{color_the_numbers(current_guess)}"
       puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
