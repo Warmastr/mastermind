@@ -70,7 +70,7 @@ class Game
 
   def play_maker
     maker_input
-    puts "\nYou chose #{color_the_numbers(@game_code)} as your guess."
+    puts "\nYou chose #{color_the_numbers(@game_code)} as your code."
     puts "\nThe computer will attempt to guess your code. Press enter to continue."
     ready_to_play = gets.chomp
     if ready_to_play != ""
@@ -96,11 +96,12 @@ class Game
 
   def computer_algorithm(array)
     code_count = possible_codes.count
+    all_codes = possible_codes
     # start somewhere to get the first hint
     if @round_number == 1
       current_guess = [1, 1, 2, 2]
     else
-      current_guess = possible_codes.sample.to_s.split('').map(&:to_i)
+      current_guess = all_codes.sample.to_s.split('').map(&:to_i)
     end
     # determine red and white pegs
     feedback = game_hint(current_guess, @game_code)
@@ -123,8 +124,7 @@ class Game
       prompt
       win
     else
-      eliminate_codes(possible_codes, current_guess, feedback)
-      
+      eliminate_codes(all_codes, current_guess, feedback)
       puts "\nRound: #{@round_number}"
       puts "The computer's guess is: #{color_the_numbers(current_guess)}"
       puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
