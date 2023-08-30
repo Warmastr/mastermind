@@ -101,9 +101,11 @@ class Game
     # determine red and white pegs
     feedback = game_hint(current_guess, @game_code)
     if @round_number == 1
-      puts "There are: #{code_count} possible codes."
+      puts "__________________________________________________________________________________"
+      puts "\nThere are: #{code_count} possible codes."
     else
-      puts "There are: #{code_count} possible codes remaining."
+      puts "__________________________________________________________________________________"
+      puts "\nThere are: #{code_count} possible codes remaining."
     end
     
     # unless the current_guess is a winner, remove all codes that don't match the feedback
@@ -116,11 +118,11 @@ class Game
       prompt
       win
     else
-      puts color_the_numbers(feedback)
       eliminate_codes(possible_codes, current_guess, feedback)
       current_guess = possible_codes.sample.to_s.split('').map(&:to_i)
-      puts "Round: #{@round_number}"
+      puts "\nRound: #{@round_number}"
       puts "The computer's guess is: #{color_the_numbers(current_guess)}"
+      puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
       prompt
       @round_number += 1
       computer_algorithm(current_guess)
@@ -152,7 +154,7 @@ class Game
   end
 
   def maker_input
-    puts 'Please create a four-digit code using numbers 1-6 that represent the colors in the legend above:'
+    puts "Please create a four-digit code using numbers 1-6 that represent the colors in the \nlegend above:"
     @game_code = gets.chomp
     @game_code = @game_code.split('').map(&:to_i)
 
