@@ -69,39 +69,90 @@ class Game
   end
 
   def play_maker
-    temp_guess = maker_input
+    maker_input
+    puts "\nYou chose #{color_the_numbers(@game_code)} as your guess."
     puts "\nThe computer will attempt to guess your code. Press enter to continue."
     ready_to_play = gets.chomp
     if ready_to_play != ""
       puts "You must press enter to continue..."
       ready_to_play = gets.chomp
     else
-      computer_algorithm(temp_guess)
+      computer_algorithm(@game_code)
     end
     
+  end
+
+  def possible_codes
+    digits = (1..6).to_a
+    all_codes = digits.product(digits, digits, digits).map { |digits| digits.join.to_i }
+  end
+
+  def eliminate_codes(possible_codes, guess, feedback)
+    possible_codes.reject! do |code|
+      # provide a game hint for each code and if it is not equal to the feedback, reject it from the array
+      game_hint(guess, code) != feedback
+    end
   end
 
   def computer_algorithm(array)
-    # generate all possible codes from 1111 to 6666 and store them in an array
-    possible_codes = (1111..6666).to_a
+    code_count = possible_codes.count
     # start somewhere to get the first hint
     current_guess = [1, 1, 2, 2]
     # determine red and white pegs
-    feedback = game_hint(current_guess, maker_input)
-    # unless the current_guess is a winner, remove all codes that don't match the feedback
-    if feedback == [4, 0]
-      puts "The computer's guess of #{current_guess} is indeed your code!"
-      exit
+    feedback = game_hint(current_guess, @game_code)
+    if @round_number == 1
+      puts "There are: #{code_count} possible codes."
     else
-      possible_codes.reject! do |code|
-        game_hint(code, current_guess) != feedback
-      end
+      puts "There are: #{code_count} possible codes remaining."
     end
     
+    # unless the current_guess is a winner, remove all codes that don't match the feedback
+    if feedback == [4, 0]
+      puts "The computer's guess is: #{color_the_numbers(current_guess)} which is the winning code!"
+      puts "The computer won in #{@round_number} rounds!"
+    elsif @round_number == 12
+      puts "Round: #{@round_number}"
+      puts "The computer's guess is: #{color_the_numbers(current_guess)}"
+      prompt
+      win
+    else
+      puts color_the_numbers(feedback)
+      eliminate_codes(possible_codes, current_guess, feedback)
+      current_guess = possible_codes.sample.to_s.split('').map(&:to_i)
+      puts "Round: #{@round_number}"
+      puts "The computer's guess is: #{color_the_numbers(current_guess)}"
+      prompt
+      @round_number += 1
+      computer_algorithm(current_guess)
+    end
+  end
+
+  def game_hint(guess, c_code)
+    red_pegs, white_pegs = 0, 0
+    # These are used as placeholders to avoid mutating the original arrays
+    unmatched_guess = []
+    unmatched_code = []
+    # determine which element and index are matched between the two arrays, if they aren't matched they get added to the corresponding unmatched array
+    guess.each_with_index do |guess_num, index|
+      if guess_num == c_code[index]
+        red_pegs += 1
+      else
+        unmatched_guess << guess_num
+        unmatched_code << c_code[index]
+      end
+    end
+    # compare the two unmatched arrays to determine if there are any matches, if there are matches a white peg is added and the match gets deleted  from the unmatched array
+    unmatched_guess.each do |num|
+      if unmatched_code.include?(num)
+        white_pegs += 1
+        unmatched_code.delete_at(unmatched_code.index(num))
+      end
+    end
+    [red_pegs, white_pegs]
   end
 
   def maker_input
-    puts '  Please create a four-digit code using numbers 1-6 that represent the colors in the legend above:'
+    puts 'Please create a four-digit code using numbers 1-6 that represent the colors in the legend above:'
     @game_code = gets.chomp
     @game_code = @game_code.split('').map(&:to_i)
 
@@ -150,41 +201,22 @@ class Game
     end
   end
 
-  def game_hint(guess, c_code)
-    red_pegs, white_pegs = 0, 0
-    # These are used as placeholders to avoid mutating the original arrays
-    unmatched_guess = []
-    unmatched_code = []
-    # determine which element and index are matched between the two arrays, if they aren't matched they get added to the corresponding unmatched array
-    guess.each_with_index do |guess_num, index|
-      if guess_num == c_code[index]
-        red_pegs += 1
-      else
-        unmatched_guess << guess_num
-        unmatched_code << c_code[index]
-      end
-    end
-    # compare the two unmatched arrays to determine if there are any matches, if there are matches a white peg is added and the match gets deleted  from the unmatched array
-    unmatched_guess.each do |num|
-      if unmatched_code.include?(num)
-        white_pegs += 1
-        unmatched_code.delete_at(unmatched_code.index(num))
-      end
-    end
-    [red_pegs, white_pegs]
-  end
-
   def game_over?(guess, c_code)
     guess.eql?(c_code)
   end
 
   def win
     title_choice
-    if @round_number == 1
+
+    if @game_mode == 'breaker' || @game_mode == 1.to_s && @round_number == 1
       puts "\nCongratulations you've won! You guessed the code in #{@round_number} round!\nThe computer's code was #{color_the_numbers(@game_code)}."
-    else
+    elsif @game_mode == 'breaker' || @game_mode == 1.to_s && @round_number > 1
       puts "\nCongratulations you've won! You guessed the code in #{@round_number} rounds!\nThe computer's code was #{color_the_numbers(@game_code)}."
+
+    elsif @game_mode == 'maker' || @game_mode == 2.to_s
+      puts "\nYou won, the computer could not guess your code in #{@round_number} rounds! Your code was #{color_the_numbers(@game_code)}.}"
     end
+
     puts "\nWould you like to play again? Enter [1] for yes or [2] for no."
     game_choice = gets.chomp
 
