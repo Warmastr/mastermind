@@ -1,4 +1,5 @@
 require_relative './display'
+require 'pry-byebug'
 # Initializes the round number to 1 and starts the game loop
 class Game
   using ColorString
@@ -87,50 +88,50 @@ class Game
     all_codes = digits.product(digits, digits, digits).map { |digits| digits.join.to_i }
   end
 
-  def eliminate_codes(possible_codes, guess, feedback)
-    possible_codes.reject! do |code|
+  def eliminate_codes(p_codes, guess, feedback)
+    p_codes.reject! do |code|
       # provide a game hint for each code and if it is not equal to the feedback, reject it from the array
       game_hint(guess, code) != feedback
     end
   end
 
   def computer_algorithm(array)
-    code_count = possible_codes.count
-    all_codes = possible_codes
-    # start somewhere to get the first hint
-    if @round_number == 1
-      current_guess = [1, 1, 2, 2]
-    else
-      current_guess = all_codes.sample.to_s.split('').map(&:to_i)
-    end
-    # determine red and white pegs
+    #binding.pry
+    @p_codes = possible_codes
+    current_guess = [1, 1, 2, 2]
     feedback = game_hint(current_guess, @game_code)
-    if @round_number == 1
-      puts "__________________________________________________________________________________"
-      puts "\nThere are: #{code_count} possible codes."
-    else
-      puts "__________________________________________________________________________________"
-      puts "\nThere are: #{code_count} possible codes remaining."
-    end
-    
-    # unless the current_guess is a winner, remove all codes that don't match the feedback
-    if feedback == [4, 0]
-      puts "The computer's guess is: #{color_the_numbers(current_guess)} which is the winning code!"
-      puts "The computer won in #{@round_number} rounds!"
-    elsif @round_number == 12
-      puts "Round: #{@round_number}"
-      puts "The computer's guess is: #{color_the_numbers(current_guess)}"
-      puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
-      prompt
-      win
-    else
-      eliminate_codes(all_codes, current_guess, feedback)
-      puts "\nRound: #{@round_number}"
-      puts "The computer's guess is: #{color_the_numbers(current_guess)}"
-      puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
-      prompt
-      @round_number += 1
-      computer_algorithm(current_guess)
+    while feedback != [4, 0] || @round_number != 12
+      if @round_number == 1
+        code_count = @p_codes.count
+        puts "__________________________________________________________________________________"
+        puts "\nThere are: #{code_count} possible codes."
+        untried_codes = eliminate_codes(@p_codes, current_guess, feedback)
+        @round_number += 1
+      elsif @round_number == 12
+        puts "Round: #{@round_number}"
+        puts "The computer's guess is: #{color_the_numbers(current_guess)}"
+        puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
+        prompt
+        clear
+        win
+      elsif feedback == [4, 0]
+        puts "The computer's guess is: #{color_the_numbers(current_guess)} which is the winning code!"
+        puts "The computer won in #{@round_number} rounds!"
+        prompt
+        break 
+      else
+        feedback = game_hint(current_guess, @game_code)
+        code_count = @p_codes.count
+        current_guess = untried_codes.sample.to_s.split('').map(&:to_i)
+        puts "__________________________________________________________________________________"
+        puts "\nThere are: #{code_count} possible codes remaining."
+        eliminate_codes(untried_codes, current_guess, feedback)
+        puts "\nRound: #{@round_number}"
+        puts "The computer's guess is: #{color_the_numbers(current_guess)}"
+        puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
+        prompt
+        @round_number += 1
+      end
     end
   end
 
@@ -221,7 +222,7 @@ class Game
       puts "\nCongratulations you've won! You guessed the code in #{@round_number} rounds!\nThe computer's code was #{color_the_numbers(@game_code)}."
 
     elsif @game_mode == 'maker' || @game_mode == 2.to_s
-      puts "\nYou won, the computer could not guess your code in #{@round_number} rounds! Your code was #{color_the_numbers(@game_code)}.}"
+      puts "\nYou won, the computer could not guess your code in #{@round_number} rounds! \nYour code was: #{color_the_numbers(@game_code)}"
     end
 
     puts "\nWould you like to play again? Enter [1] for yes or [2] for no."
