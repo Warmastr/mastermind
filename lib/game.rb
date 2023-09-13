@@ -105,6 +105,9 @@ class Game
         code_count = @p_codes.count
         puts "__________________________________________________________________________________"
         puts "\nThere are: #{code_count} possible codes."
+        puts "The computer's guess is: #{color_the_numbers(current_guess)}"
+        puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
+        prompt
         untried_codes = eliminate_codes(@p_codes, current_guess, feedback)
         @round_number += 1
       elsif @round_number == 12
