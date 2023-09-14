@@ -72,15 +72,9 @@ class Game
   def play_maker
     maker_input
     puts "\nYou chose #{color_the_numbers(@game_code)} as your code."
-    puts "\nThe computer will attempt to guess your code. Press enter to continue."
-    ready_to_play = gets.chomp
-    if ready_to_play != ""
-      puts "You must press enter to continue..."
-      ready_to_play = gets.chomp
-    else
-      computer_algorithm(@game_code)
-    end
-    
+    puts "\nThe computer will attempt to guess your code."
+    prompt
+    computer_algorithm(@game_code)
   end
 
   def possible_codes
@@ -89,56 +83,45 @@ class Game
   end
 
   def eliminate_codes(p_codes, guess, feedback)
+    # eliminate all codes that won't give the same feedback as the current guess
     p_codes.reject! do |code|
-      # provide a game hint for each code and if it is not equal to the feedback, reject it from the array
-      game_hint(guess, code) != feedback
+      game_hint(guess, code.to_s.split('').map(&:to_i)) != feedback
     end
   end
 
   def computer_algorithm(array)
-    #binding.pry
     @p_codes = possible_codes
     current_guess = [1, 1, 2, 2]
     feedback = game_hint(current_guess, @game_code)
-    while feedback != [4, 0] || @round_number != 12
-      if @round_number == 1
-        code_count = @p_codes.count
-        puts "__________________________________________________________________________________"
-        puts "\nThere are: #{code_count} possible codes."
-        puts "The computer's guess is: #{color_the_numbers(current_guess)}"
-        puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
-        prompt
-        untried_codes = eliminate_codes(@p_codes, current_guess, feedback)
-        @round_number += 1
-      elsif @round_number == 12
-        puts "Round: #{@round_number}"
-        puts "The computer's guess is: #{color_the_numbers(current_guess)}"
-        puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
-        prompt
-        clear
-        win
-      elsif feedback == [4, 0]
+  
+    while feedback != [4, 0] && @round_number <= 12      
+      puts "__________________________________________________________________________________"
+      puts "\nRound: #{@round_number}"
+      puts "The computer's guess is: #{color_the_numbers(current_guess)}"
+      puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
+      prompt
+      
+      untried_codes = eliminate_codes(@p_codes.dup, current_guess, feedback)
+      
+      if feedback == [4, 0]
         puts "The computer's guess is: #{color_the_numbers(current_guess)} which is the winning code!"
         puts "The computer won in #{@round_number} rounds!"
         prompt
-        break 
-      else
-        feedback = game_hint(current_guess, @game_code)
-        code_count = @p_codes.count
-        current_guess = untried_codes.sample.to_s.split('').map(&:to_i)
-        puts "__________________________________________________________________________________"
-        puts "\nThere are: #{code_count} possible codes remaining."
-        eliminate_codes(untried_codes, current_guess, feedback)
-        puts "\nRound: #{@round_number}"
-        puts "The computer's guess is: #{color_the_numbers(current_guess)}"
-        puts "\nHint:\nred pegs = #{game_hint(current_guess, @game_code)[0].to_s.bg_color(:red)}\nwhite pegs = #{game_hint(current_guess, @game_code)[1].to_s.bg_color(:white)}"
-        prompt
-        @round_number += 1
+        break
+      elsif @round_number == 12
+        clear
+        win
       end
+      
+      current_guess = untried_codes.sample.to_s.split('').map(&:to_i)
+      feedback = game_hint(current_guess, @game_code)
+      @round_number += 1
     end
   end
 
+
   def game_hint(guess, c_code)
+    raise "Big Error" if c_code.is_a?(Integer)
     red_pegs, white_pegs = 0, 0
     # These are used as placeholders to avoid mutating the original arrays
     unmatched_guess = []
